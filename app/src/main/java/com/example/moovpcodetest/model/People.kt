@@ -36,4 +36,7 @@ data class People(
             )
         }
     }
+
+    val fullName: String
+        get() = "$lastName $firstName"
 }
