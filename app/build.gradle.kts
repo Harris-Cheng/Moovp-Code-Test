@@ -48,8 +48,6 @@ dependencies {
     //https://square.github.io/retrofit/
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
 
-    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
-
     // moshi
     implementation("com.squareup.retrofit2:converter-moshi:2.3.0")
     implementation("com.squareup.moshi:moshi:1.11.0")
