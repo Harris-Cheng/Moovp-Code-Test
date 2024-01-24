@@ -1,7 +1,7 @@
 package com.example.moovpcodetest.usecase
 
-import com.example.moovpcodetest.model.ui.People
+import com.example.moovpcodetest.model.response.PeopleResponse
 
 interface GetPeopleListUseCase {
-    suspend operator fun invoke(): List<People>
+    suspend operator fun invoke(): List<PeopleResponse>
 }

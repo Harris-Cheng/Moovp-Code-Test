@@ -1,10 +1,12 @@
 package com.example.moovpcodetest.usecase
 
-import com.example.moovpcodetest.model.ui.People
+import com.example.moovpcodetest.model.response.PeopleResponse
 import com.example.moovpcodetest.network.ApiService
 
-class GetPeopleListUseCaseImpl: GetPeopleListUseCase {
-    override suspend fun invoke(): List<People> {
-        return ApiService.getListOfPeople().orEmpty()
+class GetPeopleListUseCaseImpl(
+    private val apiService: ApiService
+): GetPeopleListUseCase {
+    override suspend fun invoke(): List<PeopleResponse> {
+        return apiService.getListOfPeople().orEmpty()
     }
 }

@@ -1,17 +1,21 @@
 package com.example.moovpcodetest.network
 
-import com.example.moovpcodetest.di.Network
-import com.example.moovpcodetest.model.ui.People
+import com.example.moovpcodetest.model.response.PeopleResponse
 import com.example.moovpcodetest.model.ui.People.Companion.toModel
-import org.koin.java.KoinJavaComponent
+import com.example.moovpcodetest.room.PeopleDataBase
 
-object ApiService {
-    private val api: Api by KoinJavaComponent.inject(Api::class.java, Network)
-
-    suspend fun getListOfPeople(): List<People>? {
-        return api.getListOfPeople().body()?.let {
+class ApiService(
+    private val api: Api,
+    private val db: PeopleDataBase
+) {
+    suspend fun getListOfPeople(): List<PeopleResponse>? {
+        return api.getListOfPeople().body()?.also {
             it.mapNotNull { response ->
                 response.toModel()
+            }.also {
+                db.peopleDao().insertAll(
+                    it
+                )
             }
         }
     }
