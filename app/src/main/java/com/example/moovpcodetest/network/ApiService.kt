@@ -12,9 +12,9 @@ class ApiService(
         return api.getListOfPeople().body()?.also {
             it.mapNotNull { response ->
                 response.toModel()
-            }.also {
+            }.also { peoples ->
                 db.peopleDao().insertAll(
-                    it
+                    peoples
                 )
             }
         }

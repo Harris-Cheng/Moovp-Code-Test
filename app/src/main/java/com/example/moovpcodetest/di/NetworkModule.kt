@@ -9,9 +9,8 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-val Network = StringQualifier("network-service")
 val networkModule = module {
-    single(Network) {
+    single {
         val moshi = Moshi.Builder()
             .addLast(KotlinJsonAdapterFactory())
             .build()
