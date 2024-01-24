@@ -1,19 +1,22 @@
 package com.example.moovpcodetest
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-
+import com.example.moovpcodetest.adapter.PeopleAdapter
+import com.example.moovpcodetest.databinding.ActivityMapsBinding
+import com.example.moovpcodetest.viewmodel.MainViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
-import com.example.moovpcodetest.databinding.ActivityMapsBinding
-import com.example.moovpcodetest.viewmodel.MainViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,8 +28,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val mainViewModel: MainViewModel by viewModel()
 
+    private val adapter: PeopleAdapter by lazy {
+        PeopleAdapter()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         binding = ActivityMapsBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -36,16 +44,37 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+        handleInsets()
+        setupListView()
         startObserve()
+    }
+
+    private fun setupListView() {
+        binding.rvPeopleList.adapter = adapter
     }
 
     private fun startObserve() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 mainViewModel.peopleListFlow.collectLatest {
-                    // TODO
+                    adapter.submitList(it)
                 }
             }
+        }
+    }
+
+    private fun handleInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rvPeopleList) { listView, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+
+            listView.updatePadding(
+                bottom = insets.bottom
+            )
+            binding.topSafeArea.updatePadding(
+                top = insets.top
+            )
+
+            windowInsets
         }
     }
 
@@ -61,8 +90,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        // notify the view model when map is ready
+        mainViewModel.onMapReady()
+
         val startPoint = LatLng(22.294333, 114.171959)
-        mMap.addMarker(MarkerOptions().position(startPoint))
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startPoint, 12f))
+//        mMap.addMarker(MarkerOptions().position(startPoint))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startPoint, 10f))
     }
 }

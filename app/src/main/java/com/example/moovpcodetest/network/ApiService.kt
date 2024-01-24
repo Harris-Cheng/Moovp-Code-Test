@@ -1,7 +1,7 @@
 package com.example.moovpcodetest.network
 
 import com.example.moovpcodetest.model.response.PeopleResponse
-import com.example.moovpcodetest.model.ui.People.Companion.toModel
+import com.example.moovpcodetest.model.People.Companion.toModel
 import com.example.moovpcodetest.room.PeopleDataBase
 
 class ApiService(

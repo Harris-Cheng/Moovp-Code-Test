@@ -61,11 +61,14 @@ dependencies {
     implementation("com.squareup.moshi:moshi-kotlin:1.11.0")
 
     //https://square.github.io/okhttp/
-    implementation("com.squareup.okhttp3:okhttp:3.14.9")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // room
     val roomVersion = "2.6.1"
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+
+    // coil
+    implementation("io.coil-kt:coil:2.5.0")
 }

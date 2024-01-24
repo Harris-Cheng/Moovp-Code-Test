@@ -6,14 +6,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.moovpcodetest.network.ApiService
 import com.example.moovpcodetest.room.PeopleDataBase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     app: Application,
     apiService: ApiService,
-    private val db: PeopleDataBase
+    db: PeopleDataBase
 ): AndroidViewModel(app) {
 
     init {
@@ -23,9 +26,21 @@ class MainViewModel(
         }
     }
 
-    // start observing from room db
-    val peopleListFlow = db.peopleDao().getAll().stateIn(
-        viewModelScope, SharingStarted.Eagerly, emptyList()
+    private val mapReady = MutableStateFlow(false)
+
+    // start observing from room db,
+    // and emit value when map ready,
+    // omit value if not changed
+    val peopleListFlow = mapReady.combineTransform(db.peopleDao().getAll()) { mapReady, list ->
+        if (mapReady) {
+            emit(list)
+        }
+    }.distinctUntilChanged().shareIn(
+        viewModelScope, SharingStarted.Eagerly, 1
     )
+
+    fun onMapReady() {
+        mapReady.value = true
+    }
 
 }
