@@ -7,29 +7,28 @@ import com.example.moovpcodetest.model.People
 import com.example.moovpcodetest.model.ui.PeopleUIModel
 import com.example.moovpcodetest.network.ApiService
 import com.example.moovpcodetest.room.PeopleDataBase
+import com.example.moovpcodetest.usecase.UpdatePeopleListUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     app: Application,
-    apiService: ApiService,
+    updateApiUseCase: UpdatePeopleListUseCase,
     db: PeopleDataBase
 ): AndroidViewModel(app) {
 
     init {
         // request api on init
         viewModelScope.launch(Dispatchers.IO) {
-            apiService.getListOfPeople()
+            updateApiUseCase()
         }
     }
 

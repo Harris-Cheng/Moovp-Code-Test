@@ -9,14 +9,19 @@ class ApiService(
     private val db: PeopleDataBase
 ) {
     suspend fun getListOfPeople(): List<PeopleResponse>? {
-        return api.getListOfPeople().body()?.also {
-            it.mapNotNull { response ->
-                response.toModel()
-            }.also { peoples ->
-                db.peopleDao().insertAll(
-                    peoples
-                )
+        return try {
+            api.getListOfPeople().body()?.also {
+                it.mapNotNull { response ->
+                    response.toModel()
+                }.also { peoples ->
+                    db.peopleDao().insertAll(
+                        peoples
+                    )
+                }
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            emptyList()
         }
     }
 }
