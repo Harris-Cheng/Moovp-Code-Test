@@ -1,6 +1,7 @@
 package com.example.moovpcodetest.di
 
 import com.example.moovpcodetest.network.ApiService
+import com.example.moovpcodetest.network.ApiServiceImpl
 import com.example.moovpcodetest.usecase.UpdatePeopleListUseCase
 import com.example.moovpcodetest.usecase.UpdatePeopleListUseCaseImpl
 import com.example.moovpcodetest.viewmodel.MainViewModel
@@ -13,7 +14,7 @@ import org.koin.dsl.module
 val appModule = module {
     factoryOf(::UpdatePeopleListUseCaseImpl) bind UpdatePeopleListUseCase::class
 
-    singleOf(::ApiService)
+    singleOf(::ApiServiceImpl) bind ApiService::class
 
     viewModelOf(::MainViewModel)
 }

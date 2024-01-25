@@ -5,7 +5,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moovpcodetest.model.People
 import com.example.moovpcodetest.model.ui.PeopleUIModel
-import com.example.moovpcodetest.network.ApiService
 import com.example.moovpcodetest.room.PeopleDataBase
 import com.example.moovpcodetest.usecase.UpdatePeopleListUseCase
 import kotlinx.coroutines.Dispatchers
